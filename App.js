@@ -1,77 +1,83 @@
 import React, { useState } from "react";
 import {
   StyleSheet,
-  Text,
   View,
   FlatList,
-  TouchableOpacity
+  Alert,
+  TouchableWithoutFeedback,
+  Keyboard
 } from "react-native";
 
+import Header from "./components/Header";
+import TodoItem from "./components/TodoItem";
+import AddTodo from "./components/AddTodo";
+
 export default function App() {
-  const [people, setPeople] = useState([
-    { name: "Diogo1", id: "1" },
-    { name: "Diogo2", id: "2" },
-    { name: "Diogo3", id: "3" },
-    { name: "Diogo4", id: "4" },
-    { name: "Diogo5", id: "5" },
-    { name: "Diogo6", id: "6" },
-    { name: "Diogo7", id: "7" },
-    { name: "Diogo8", id: "8" },
-    { name: "Diogo9", id: "9" },
-    { name: "Diogo10", id: "10" },
-    { name: "Diogo11", id: "11" },
-    { name: "Diogo12", id: "12" },
-    { name: "Diogo13", id: "13" },
-    { name: "Diogo14", id: "14" },
-    { name: "Diogo15", id: "15" },
-    { name: "Diogo16", id: "11" }
+  const [todos, setTodos] = useState([
+    { text: "comprar café", key: "1" },
+    { text: "criar um aplicativo", key: "2" },
+    { text: "jogar ps3", key: "3" }
   ]);
 
-  const pressHandler = id => {
-    setPeople(prevPleople => {
-      return prevPleople.filter(person => person.id !== id);
+  const pressHandler = key => {
+    setTodos(prevTodos => {
+      return prevTodos.filter(todo => todo.key !== key);
     });
   };
 
-  function Item({ item }) {
-    return (
-      <TouchableOpacity
-        style={styles.item}
-        onPress={() => pressHandler(item.id)}
-      >
-        <Text style={styles.title}>{item.name}</Text>
-      </TouchableOpacity>
-    );
-  }
+  const submitHandler = text => {
+    if (text.length > 3) {
+      setTodos(prevTodos => {
+        return [
+          ...prevTodos,
+          {
+            text,
+            key: Math.random().toString()
+          }
+        ];
+      });
+    } else {
+      Alert.alert(
+        "Oops!",
+        "Você precisa preencher com no mínimo 3 caracteres.",
+        [{ text: "Entendi", onPress: () => console.log("alert closed") }]
+      );
+    }
+  };
 
   return (
-    <View style={styles.container}>
-      <FlatList
-        data={people}
-        renderItem={({ item }) => <Item item={item} />}
-        keyExtractor={item => item.name}
-        numColumns={2}
-      />
-    </View>
+    <TouchableWithoutFeedback
+      onPress={() => {
+        Keyboard.dismiss();
+      }}
+    >
+      <View style={styles.container}>
+        <Header />
+        <View style={styles.content}>
+          <AddTodo submitHandler={submitHandler} />
+          <View style={styles.list}>
+            <FlatList
+              data={todos}
+              renderItem={({ item }) => (
+                <TodoItem item={item} pressHandler={pressHandler} />
+              )}
+            />
+          </View>
+        </View>
+      </View>
+    </TouchableWithoutFeedback>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
-    paddingTop: 40,
-    paddingHorizontal: 10
+    backgroundColor: "#fff"
   },
-  item: {
-    backgroundColor: "#f9c2ff",
-    padding: 20,
-    marginVertical: 8,
-    marginHorizontal: 16,
-    width: "40%"
+  content: {
+    padding: 40
   },
-  title: {
-    fontSize: 15,
-    color: "black"
+  list: {
+    marginTop: 40
   }
 });
