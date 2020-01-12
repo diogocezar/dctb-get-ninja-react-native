@@ -1,86 +1,24 @@
 import React, { useState } from "react";
-import {
-  StyleSheet,
-  View,
-  FlatList,
-  Alert,
-  TouchableWithoutFeedback,
-  Keyboard
-} from "react-native";
+import * as Font from "expo-font";
+import { AppLoading } from "expo";
 
-import Header from "./components/Header";
-import TodoItem from "./components/TodoItem";
-import AddTodo from "./components/AddTodo";
+import Navigator from "./routes/stacks/home";
+
+const getFonts = () => {
+  return Font.loadAsync({
+    "montserrat-regular": require("./assets/fonts/Montserrat-Regular.ttf"),
+    "montserrat-semi-bold": require("./assets/fonts/Montserrat-SemiBold.ttf")
+  });
+};
 
 export default function App() {
-  const [todos, setTodos] = useState([
-    { text: "comprar café", key: "1" },
-    { text: "criar um aplicativo", key: "2" },
-    { text: "jogar ps3", key: "3" }
-  ]);
+  const [fontsLoaded, setFontsLoaded] = useState(false);
 
-  const pressHandler = key => {
-    setTodos(prevTodos => {
-      return prevTodos.filter(todo => todo.key !== key);
-    });
-  };
-
-  const submitHandler = text => {
-    if (text.length > 3) {
-      setTodos(prevTodos => {
-        return [
-          ...prevTodos,
-          {
-            text,
-            key: Math.random().toString()
-          }
-        ];
-      });
-    } else {
-      Alert.alert(
-        "Oops!",
-        "Você precisa preencher com no mínimo 3 caracteres.",
-        [{ text: "Entendi", onPress: () => console.log("alert closed") }]
-      );
-    }
-  };
-
-  return (
-    <TouchableWithoutFeedback
-      onPress={() => {
-        Keyboard.dismiss();
-      }}
-    >
-      <View style={styles.container}>
-        <Header />
-        <View style={styles.content}>
-          <AddTodo submitHandler={submitHandler} />
-          <View style={styles.list}>
-            <FlatList
-              data={todos}
-              renderItem={({ item }) => (
-                <TodoItem item={item} pressHandler={pressHandler} />
-              )}
-            />
-          </View>
-        </View>
-      </View>
-    </TouchableWithoutFeedback>
-  );
-}
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff"
-  },
-  content: {
-    flex: 1,
-    padding: 40
-  },
-  list: {
-    flex: 1,
-    marginTop: 40,
-    marginBottom: 40
+  if (fontsLoaded) {
+    return <Navigator />;
+  } else {
+    return (
+      <AppLoading startAsync={getFonts} onFinish={() => setFontsLoaded(true)} />
+    );
   }
-});
+}
