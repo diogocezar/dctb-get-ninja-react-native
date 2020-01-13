@@ -12,6 +12,21 @@ const Title1 = styled.Text`
   font-size: 24px;
   font-weight: 500;
   color: palevioletred;
+  margin-bottom: 30px;
+  margin-top: 30px;
+`;
+
+const Title2 = styled.Text`
+  font-family: "montserrat-regular";
+  font-size: 16px;
+  font-weight: 500;
+  color: palevioletred;
+  padding: 20px;
+`;
+
+const BorderBottom = styled.View`
+  border-bottom-color: #aaa;
+  border-bottom-width: 1px;
 `;
 
 const Paragraph = styled.Text`
@@ -20,4 +35,4 @@ const Paragraph = styled.Text`
   line-height: 20px;
 `;
 
-module.exports = { Container, Title1, Paragraph };
+module.exports = { Container, BorderBottom, Title1, Title2, Paragraph };

@@ -1,15 +1,13 @@
 import React from "react";
 import { View } from "react-native";
 import { createStackNavigator } from "react-navigation-stack";
-import { createAppContainer } from "react-navigation";
 
-import Home from "../../../screens/Home";
-import MusicDetails from "../../../screens/MusicDetails";
+import About from "../../../screens/About";
 import Header from "../../../components/shared/Header";
 
 const screens = {
-  Home: {
-    screen: Home,
+  About: {
+    screen: About,
     navigationOptions: ({ navigation }) => {
       return {
         left: null,
@@ -21,26 +19,21 @@ const screens = {
               height: 50
             }}
           >
-            <Header title="Principal" navigation={navigation} />
+            <Header title="Sobre" navigation={navigation} />
           </View>
         )
       };
     }
-  },
-  MusicDetails: {
-    screen: MusicDetails,
-    navigationOptions: {
-      title: "Detalhes da Música"
-    }
   }
 };
 
-const HomeStack = createStackNavigator(screens, {
+const AboutStack = createStackNavigator(screens, {
   defaultNavigationOptions: {
     headerStyle: {
+      backgroundColor: "#eee",
       height: 100
     }
   }
 });
 
-export default HomeStack;
+export default AboutStack;
